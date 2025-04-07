@@ -45,6 +45,7 @@ public class MenuManager : MonoBehaviour
 
     public void UpdatePlayerCountDisplay(int currentPlayers, int maxPlayers)
     {
+		if (playerCountText == null) return;
         playerCountText.text = $"Players: {currentPlayers}/{maxPlayers}";
         playerCountText.gameObject.SetActive(true);
     }
