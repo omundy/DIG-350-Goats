@@ -10,8 +10,10 @@ public class MenuManager : MonoBehaviour
     public Button joinButton;
     public TMP_Text playerCountText;
     public Button startGameButton;
+    public Button startLeverGameButton;
 
     [SerializeField] private OurNetwork ourNetwork;
+    [SerializeField] private LobbyManager lobbyManager;
 
     private void Start()
     {
@@ -26,11 +28,13 @@ public class MenuManager : MonoBehaviour
         }
 
         ourNetwork.Initialize(this);
+        lobbyManager.Initialize(this, ourNetwork);
 
-        hostButton.onClick.AddListener(ourNetwork.HostGame);
-        joinButton.onClick.AddListener(() => ourNetwork.JoinGame(joinCodeInput.text));
-        startGameButton.onClick.AddListener(ourNetwork.StartGame);
+        hostButton.onClick.AddListener(lobbyManager.HostGame);
+        joinButton.onClick.AddListener(() => lobbyManager.JoinGame(joinCodeInput.text));
+        startGameButton.onClick.AddListener(lobbyManager.StartGame);
         startGameButton.gameObject.SetActive(false);
+        startLeverGameButton.onClick.AddListener(lobbyManager.StartLeverGame);
         playerCountText.gameObject.SetActive(false);
     }
 
@@ -41,6 +45,7 @@ public class MenuManager : MonoBehaviour
 
     public void UpdatePlayerCountDisplay(int currentPlayers, int maxPlayers)
     {
+		if (playerCountText == null) return;
         playerCountText.text = $"Players: {currentPlayers}/{maxPlayers}";
         playerCountText.gameObject.SetActive(true);
     }
