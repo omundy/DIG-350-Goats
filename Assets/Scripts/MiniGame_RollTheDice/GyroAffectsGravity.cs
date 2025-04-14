@@ -7,25 +7,20 @@ public class GyroAffectsGravity : MonoBehaviour
     public Quaternion initialRotation;
     public bool gyroEnabled = false;
     public bool compassEnabled = false;
+    public static bool gameEnabled = false;
+    public Rigidbody rb;
 
     void Start() => Init();
+
     async void Init()
     {
-        // Screen.orientation = ScreenOrientation.LandscapeLeft;
-
-        Screen.autorotateToPortrait = true;
-        Screen.autorotateToPortraitUpsideDown = false;
-        Screen.autorotateToLandscapeLeft = false;
-        Screen.autorotateToLandscapeRight = false;
-        Screen.orientation = ScreenOrientation.AutoRotation;
-
-
         if (SystemInfo.supportsGyroscope)
             await WaitForGyro();
         else
             Debug.LogError("Gyroscope not supported on this device.");
-    }
 
+        rb = GetComponent<Rigidbody>();
+    }
 
     async Task<bool> WaitForGyro()
     {
@@ -47,6 +42,8 @@ public class GyroAffectsGravity : MonoBehaviour
                 Debug.Log("EnableSensors() => gyro and compass enabled");
                 // Capture the initial rotation as an inverse, so we can apply it as an offset
                 initialRotation = ConvertGyroRotation(Input.gyro.attitude);
+
+                gameEnabled = true;
                 return true;
             }
             // if not then loop
@@ -57,13 +54,13 @@ public class GyroAffectsGravity : MonoBehaviour
         return false;
     }
 
-
-    void Update()
+    void FixedUpdate()
     {
-        if (gyroEnabled)
+        if (gameEnabled)
         {
             // Apply the offset so the object starts with zeroed rotation
-            transform.rotation = initialRotation * ConvertGyroRotation(Input.gyro.attitude);
+            // transform.rotation = initialRotation * ConvertGyroRotation(Input.gyro.attitude);
+            rb.rotation = initialRotation * ConvertGyroRotation(Input.gyro.attitude);
 
             // Physics.gravity = new Vector3(-2f, -4f, 2f);
             // gravity = Vector3.Normalize((initialRotation * ConvertGyroRotation(Input.gyro.attitude)).eulerAngles)*4;
@@ -72,8 +69,6 @@ public class GyroAffectsGravity : MonoBehaviour
     }
 
     // Convert the gyroscope rotation to Unity's coordinate system
-    private Quaternion ConvertGyroRotation(Quaternion q)
-    {
-        return new Quaternion(q.x, q.z, q.y, -q.w);
-    }
+    private Quaternion ConvertGyroRotation(Quaternion q) =>
+        new Quaternion(q.x, q.z, q.y, -q.w).normalized;
 }
