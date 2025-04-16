@@ -165,7 +165,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.UnityTechnologies.com.unity.template.urpblank
     Standalone: com.SneakawayStudio.HeistHustle
-    iPhone: com.SneakawayStudio.HeistHustle
+    iPhone: com.SneakawayStudio.HeistHussle
   buildNumber:
     Standalone: 0
     VisionOS: 0
