@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +10,7 @@ using UnityEngine.Events;
 /// 1. Add this to a game object to make a singleton
 /// 2. Add child objects with managers (e.g. SoundManager) for global referencing
 /// </summary>
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
 	/////////////////////////////////////////////////////
 	//////////////////// SINGLETON //////////////////////
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
 	public bool singletonCreated = false;
 
 	public OurNetwork OurNetwork { get; set; }
+	public MapManager MapManager { get; set; }
 
 	[Tooltip("Turn on debugging")]
 	public bool DEBUG = true;
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
 
 		// @@@ SERVICE LOCATOR => Store references for global access
 		OurNetwork = GetComponentInChildren<OurNetwork>();
+		MapManager = GetComponentInChildren<MapManager>();
 
 		if (DEBUG)
 			Debug.Log($"*** GameManager (Singleton) created ***");
