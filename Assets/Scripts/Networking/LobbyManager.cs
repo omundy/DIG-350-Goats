@@ -15,10 +15,10 @@ using System.Collections;
 // No longer using Unity Lobbies, just Unity Relay
 public class LobbyManager : MonoBehaviour
 {
-    public bool isHost = false;
+    public bool isHost = Globals.isHost;
     public MenuManager menuManager;
     public OurNetwork ourNetwork;
-    private string joinCode;
+    public string joinCode;
     private int maxPlayers = 6;
     private int currentPlayerCount = 0;
 
@@ -30,6 +30,7 @@ public class LobbyManager : MonoBehaviour
 
     private void Start()
     {
+		Debug.Log(Globals.isHost);
         possibleColors.Add(new PlayerColor(colorEnumerator.DarkBlue, new Color32 (25, 25, 112, 255), colorMats[0]));
         possibleColors.Add(new PlayerColor(colorEnumerator.DarkGreen, new Color32 (0, 100, 0, 255), colorMats[1]));
         possibleColors.Add(new PlayerColor(colorEnumerator.Fuchsia, new Color32 (190, 0, 255, 255), colorMats[2]));
@@ -81,7 +82,7 @@ public class LobbyManager : MonoBehaviour
             menuManager.UpdateJoinCodeDisplay(joinCode);
             Debug.Log($"Relay allocation created with join code: {joinCode}");
             
-            isHost = true;
+            // Globals.isHost = true;
             GameManager.Instance.MapManager.hostId = NetworkManager.Singleton.LocalClientId;
             UpdatePlayerCount();
             ourNetwork.playerInfoList.Add(new PlayerInfo("Host", possibleColors[currentPlayerCount], 0));
@@ -142,7 +143,7 @@ public class LobbyManager : MonoBehaviour
             
             Debug.Log($"Joined game with code: {code}");
             joinCode = code;
-            isHost = false;
+            // Globals.isHost = false;
             
 
 
@@ -165,7 +166,7 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("Client connected!");
 
         // This function updates the UI when a player joins
-        if(isHost){
+        if(Globals.isHost){
             try{
                 ourNetwork.playerInfoList.Add(new PlayerInfo("Player Joining", possibleColors[currentPlayerCount - 2], 0));
                 menuManager.playerEntries[ourNetwork.playerInfoList.Count - 2].gameObject.SetActive(true);
@@ -174,7 +175,7 @@ public class LobbyManager : MonoBehaviour
             catch (System.Exception e){
                 Debug.Log("Index out of bounds!");
             }
-            
+
         }
         
         // You'll need to implement a way to share player IDs and assign indices
@@ -197,11 +198,11 @@ public class LobbyManager : MonoBehaviour
     public void StartGame()
     {
         NetworkManager.Singleton.SceneManager.LoadScene("Map", LoadSceneMode.Single);
-        
     }
+	
     public void StartLeverGame()
     {
-        if (isHost)
+        if (Globals.isHost)
         {
             // Use NetworkManager to load the scene on all clients
             NetworkManager.Singleton.SceneManager.LoadScene("LeversMinigame", LoadSceneMode.Single);
@@ -209,7 +210,7 @@ public class LobbyManager : MonoBehaviour
     }
     public void StartLaserGame()
     {
-        if (isHost)
+        if (Globals.isHost)
         {
             // Use NetworkManager to load the scene on all clients
             NetworkManager.Singleton.SceneManager.LoadScene("LaserMinigame", LoadSceneMode.Single);
@@ -217,7 +218,7 @@ public class LobbyManager : MonoBehaviour
     }
     public void StartClimbGame()
     {
-        if (isHost)
+        if (Globals.isHost)
         {
             // Use NetworkManager to load the scene on all clients
             NetworkManager.Singleton.SceneManager.LoadScene("ClimbingMinigame", LoadSceneMode.Single);
@@ -225,7 +226,7 @@ public class LobbyManager : MonoBehaviour
     }
     public void StartHackGame()
     {
-        if (isHost)
+        if (Globals.isHost)
         {
             // Use NetworkManager to load the scene on all clients
             NetworkManager.Singleton.SceneManager.LoadScene("HackingMinigame", LoadSceneMode.Single);
@@ -234,7 +235,7 @@ public class LobbyManager : MonoBehaviour
 
     public void StartMapGame()
     {
-        if (isHost)
+        if (Globals.isHost)
         {
             // Use NetworkManager to load the scene on all clients
             NetworkManager.Singleton.SceneManager.LoadScene("Map", LoadSceneMode.Single);

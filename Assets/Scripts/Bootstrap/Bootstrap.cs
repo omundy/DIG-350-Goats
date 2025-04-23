@@ -11,7 +11,7 @@ public class Bootstrap : MonoBehaviour
 
     public void SetClient()
     {
-        Globals.isHost = true;
+        Globals.isHost = false;
         SceneManager.LoadScene("Menu");
     }
 }

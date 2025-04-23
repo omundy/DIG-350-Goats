@@ -67,6 +67,7 @@ public class MenuManager : MonoBehaviour
     private void EnterPhoneMode(){
         hostUI.gameObject.SetActive(false);
         clientStartUI.gameObject.SetActive(true);
+		joinCodeInput.text = lobbyManager.joinCode;
     }
 
     public void UpdateJoinCodeDisplay(string code)
